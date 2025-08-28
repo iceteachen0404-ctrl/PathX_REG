@@ -1,0 +1,57 @@
+# REG评估器配置文件
+reg_evaluator:
+  # 嵌入模型选择
+  embedding_model: 'aaditya/Llama3-OpenBioLLM-8B'  # 可选: 'dmis-lab/biobert-v1.1', 'aaditya/Llama3-OpenBioLLM-8B', 'openai-communitya/gpt2', 'meta-llama/Meta-Llama-3.1-8B-Instruct', 'NeuML/pubmedbert-base-embeddings'
+  
+  # Spacy模型
+  spacy_model: 'en_core_sci_lg'
+  
+  # 评估频率
+  eval_frequency: 2  # 每N个epoch进行一次REG评估
+  
+  # 评估样本数量
+  num_eval_samples: 50  # 用于评估的样本数量
+  
+  # 文本生成参数
+  generation:
+    max_length: 100
+    temperature: 0.7
+    top_p: 0.9
+    do_sample: true
+
+# 训练配置
+training:
+  batch_size: 4
+  epochs: 10
+  learning_rate: 1e-4
+  max_seq_len: 512
+  val_split: 0.1
+  save_every: 5
+  
+  # 混合精度训练
+  amp:
+    enabled: true
+
+# 模型配置
+model:
+  dim: 1024
+  num_tokens: 42384
+  unimodal_depth: 6
+  multimodal_depth: 6
+  dim_latents: 5120
+  image_dim: 1280
+  num_img_queries: 256
+  dim_head: 64
+  heads: 16
+  ff_mult: 4
+  caption_loss_weight: 1.0
+  contrastive_loss_weight: 1.0
+  pad_id: 1
+
+# 数据配置
+data:
+  image_dim: 2560  # Prism的tile embedding维度
+
+# 日志配置
+logging:
+  level: 'INFO' 

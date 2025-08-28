@@ -1,0 +1,66 @@
+# 多模态VLM模型训练配置
+
+# 数据配置
+data:
+  embeddings_dir: "./data/embeddings"  # WSI embeddings目录
+  labels_file: "./data/labels.json"    # 文本标签JSON文件
+  max_seq_len: 512                     # 文本序列最大长度
+  image_dim: 2560                      # 图像embedding维度
+  val_split: 0.1                       # 验证集比例
+
+# 模型配置
+model:
+  dim: 1024                            # 模型维度（与BioGPT的hidden_size一致）
+  unimodal_depth: 6                    # 单模态层深度
+  multimodal_depth: 6                  # 多模态层深度
+  dim_latents: 5120                    # 潜在空间维度（与Prism配置一致）
+  image_dim: 1280                      # 图像embedding维度（Prism输出）
+  num_img_queries: 256                 # 图像查询数量
+  dim_head: 64                         # 注意力头维度
+  heads: 16                            # 注意力头数量
+  ff_mult: 4                           # 前馈网络倍数
+  caption_loss_weight: 1.0             # 描述损失权重
+  contrastive_loss_weight: 1.0         # 对比损失权重
+
+# 训练配置
+training:
+  batch_size: 4                        # 批次大小
+  epochs: 10                           # 训练轮数
+  learning_rate: 1e-4                  # 学习率
+  weight_decay: 0.01                   # 权重衰减
+  save_every: 5                        # 每N个epoch保存一次
+  output_dir: "./checkpoints"          # 输出目录
+  num_workers: 4                       # 数据加载器工作进程数
+
+# 优化器配置
+optimizer:
+  type: "AdamW"                        # 优化器类型
+  betas: [0.9, 0.999]                 # AdamW的beta参数
+  eps: 1e-8                           # AdamW的epsilon参数
+
+# 学习率调度器配置
+scheduler:
+  type: "CosineAnnealingLR"           # 调度器类型
+  T_max: 10                           # 余弦退火的周期
+
+# 混合精度训练配置
+amp:
+  enabled: true                       # 是否启用混合精度训练
+  dtype: "float16"                    # 混合精度数据类型
+
+# 日志配置
+logging:
+  level: "INFO"                       # 日志级别
+  save_logs: true                     # 是否保存日志文件
+  log_dir: "./logs"                   # 日志目录
+
+# 设备配置
+device:
+  use_cuda: true                      # 是否使用CUDA
+  cuda_device: 0                      # CUDA设备ID
+
+# 检查点配置
+checkpoint:
+  save_best: true                     # 是否保存最佳模型
+  save_last: true                     # 是否保存最后一个epoch
+  resume_from: null                   # 从检查点恢复训练（路径） 
